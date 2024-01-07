@@ -22,9 +22,9 @@ jobs:
       - name: Install misskey
         run: |
           wget https://raw.githubusercontent.com/Srgr0/bash-install/refactor/a.sh
-          wget https://raw.githubusercontent.com/Srgr0/bash-install/refactor/testenv_systemd.txt
+          wget https://raw.githubusercontent.com/Srgr0/bash-install/refactor/testenv_githubactions.txt
           chmod +x a.sh
-          ./a.sh -c testenv_systemd.txt
+          ./a.sh -c testenv_githubactions.txt
 
       - name: Wait
         run: |
