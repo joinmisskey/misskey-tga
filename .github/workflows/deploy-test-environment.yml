@@ -3,6 +3,10 @@ name: Deploy test environment
 on:
   #push
   workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy(optional)'
+        required: false
 
 jobs:
   deploy-test-environment:
@@ -11,7 +15,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        ref: 'your-branch-here'
+        ref: ${{ github.event.inputs.branch || 'your-default-branch-here' }}
         
 
     - name: Set environment variable (for tput command & pnpm)
@@ -35,10 +39,11 @@ jobs:
 
     - name: Post tunnel info to Discord
       run: |
-        echo "::add-mask::NGROK_URL=$(curl http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels[0].public_url')" >> $GITHUB_ENV
-        echo "CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S JST')" >> $GITHUB_ENV
+        NGROK_URL=$(curl http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels[0].public_url')
+        echo "::add-mask::NGROK_URL"
+        CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S JST')
         COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
-        curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"URL: ${{ env.NGROK_URL }}\nRepository: ${{ github.repository }}\nCommit: $COMMIT_URL\nTime: ${{ env.CURRENT_TIME }}\"}"  ${{ secrets.DISCORD_WEBHOOK_URL }}
+        curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"URL: $NGROK_URL\nRepository: ${{ github.repository }}\nCommit: $COMMIT_URL\nTime: $CURRENT_TIME\"}" ${{ secrets.DISCORD_WEBHOOK_URL }}
 
     - name: Wait
       run: |
