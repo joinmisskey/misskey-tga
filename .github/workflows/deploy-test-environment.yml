@@ -1,33 +1,38 @@
 name: Deploy test environment
 
 on:
-  #push:
+  #push
   workflow_dispatch:
 
 jobs:
   deploy-test-environment:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          ref: 'your-branch-here'
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        ref: 'your-branch-here'
+        
 
-      - name: Start ngrok tunnel
-        run: |
-          wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
-          sudo tar xvzf ./ngrok-v3-stable-linux-amd64.tgz -C /usr/local/bin
-          ngrok authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
-          ngrok http -auth="${{ secrets.ACCESS_ID }}:${{ secrets.ACCESS_PASS }}" 3000 &
+    - name: Set environment variable (for tput command & pnpm)
+      run: |
+        echo "TERM=xterm" >> $GITHUB_ENV
 
-      - name: Install misskey
-        run: |
-          wget https://raw.githubusercontent.com/Srgr0/bash-install/refactor/a.sh
-          wget https://raw.githubusercontent.com/Srgr0/bash-install/refactor/testenv_githubactions.txt
-          chmod +x a.sh
-          ./a.sh -c testenv_githubactions.txt
+    - name: Install misskey
+      run: |
+        wget https://raw.githubusercontent.com/Srgr0/bash-install/refactor/a.sh
+        wget https://raw.githubusercontent.com/Srgr0/bash-install/refactor/testenv_githubactions.txt
+        sudo chmod 555 ./a.sh
+        sudo bash -x ./a.sh -c ./testenv_githubactions.txt
 
-      - name: Wait
-        run: |
-          sleep 3600
+    - name: Start ngrok tunnel
+      run: |
+        wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
+        sudo tar xvzf ./ngrok-v3-stable-linux-amd64.tgz -C /usr/local/bin
+        ngrok authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
+        ngrok http 3000 &
+#--basic-auth "${{ secrets.ACCESS_ID }}:${{ secrets.ACCESS_PASS }}"
+
+    - name: Wait
+      run: |
+        timeout 600 tail -f /var/log/syslog || true
