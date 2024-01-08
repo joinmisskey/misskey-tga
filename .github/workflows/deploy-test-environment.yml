@@ -33,6 +33,13 @@ jobs:
         ngrok http 3000 &
 #--basic-auth "${{ secrets.ACCESS_ID }}:${{ secrets.ACCESS_PASS }}"
 
+    - name: Post tunnel info to Discord
+      run: |
+        echo "::add-mask::NGROK_URL=$(curl http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels[0].public_url')" >> $GITHUB_ENV
+        echo "CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S JST')" >> $GITHUB_ENV
+        COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+        curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"URL: ${{ env.NGROK_URL }}\nRepository: ${{ github.repository }}\nCommit: $COMMIT_URL\nTime: ${{ env.CURRENT_TIME }}\"}"  ${{ secrets.DISCORD_WEBHOOK_URL }}
+
     - name: Wait
       run: |
         timeout 600 tail -f /var/log/syslog || true
