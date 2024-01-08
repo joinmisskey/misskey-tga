@@ -14,7 +14,7 @@ GitHub Actions Runner上でMisskeyインスタンスをホストし、ngrok経�
 1. ngrokアカウントにログイン/作成し、Authtokenを取得  
 2. リポジトリのAction Secretに以下を追加  
    NGROK_AUTH_TOKEN : ngrokアカウントのAuthtoken  
-   ~~ACCESS_ID : テスト環境へのアクセスに使用するID~~(issue https://github.com/Srgr0/misskey-test-ga/issues/1)  
-   ~~ACCESS_PASS : テスト環境へのアクセスに使用するパスワード~~(issue https://github.com/Srgr0/misskey-test-ga/issues/1)  
+   ~~ACCESS_ID : テスト環境へのアクセスに使用するID~~ (issue https://github.com/Srgr0/misskey-test-ga/issues/1)  
+   ~~ACCESS_PASS : テスト環境へのアクセスに使用するパスワード~~ (issue https://github.com/Srgr0/misskey-test-ga/issues/1)  
 3. workflowファイルをリポジトリにコピーし、必要に応じて編集  
 4. 開発でテスト環境を活用  
