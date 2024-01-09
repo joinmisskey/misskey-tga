@@ -12,15 +12,16 @@ jobs:
   deploy-test-environment:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.inputs.branch || 'your-default-branch-here' }}
-        
-
     - name: Set environment variable (for tput command & pnpm)
       run: |
         echo "TERM=xterm" >> $GITHUB_ENV
+        BRANCH=${{ github.event.inputs.branch || 'your-default-branch-here' }}
+        echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ env.BRANCH }}
 
     - name: Start cloudflare tunnel (quick)
       run: |
@@ -38,7 +39,8 @@ jobs:
         wget https://raw.githubusercontent.com/Srgr0/bash-install/refactor/a.sh
         wget https://raw.githubusercontent.com/Srgr0/bash-install/refactor/testenv_githubactions.txt
         sed -i "s/host=127.0.0.1/host=$TUNNEL_DOMAIN/g" testenv_githubactions.txt
-        sed -i 's|git_repository=https://github.com/misskey-dev/misskey|git_repository=local_$GITHUB_WORKSPACE|g' testenv_githubactions.txt
+        sed -i "s|git_repository=https://github.com/misskey-dev/misskey|git_repository=https://github.com/$GITHUB_REPOSITORY|g" testenv_githubactions.txt
+        sed -i "s|git_branch=master|git_branch=$BRANCH|g" testenv_githubactions.txt
         sudo chmod 555 ./a.sh
         sudo bash -x ./a.sh -c ./testenv_githubactions.txt
 
