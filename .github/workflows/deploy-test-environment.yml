@@ -22,28 +22,30 @@ jobs:
       run: |
         echo "TERM=xterm" >> $GITHUB_ENV
 
+    - name: Start cloudflare tunnel (quick)
+      run: |
+        wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+        sudo dpkg -i cloudflared-linux-amd64.deb
+        sudo cloudflared tunnel --metrics localhost:55555 --url localhost:3000 > /dev/null 2>&1 &
+        sleep 15
+        TUNNEL_RESPONSE=$(curl http://localhost:55555/quicktunnel)
+        TUNNEL_DOMAIN=$(echo $TUNNEL_RESPONSE | grep -o '"hostname":"[^"]*' | grep -o '[^"]*$')
+        echo "::add-mask::$TUNNEL_DOMAIN"
+        echo "TUNNEL_DOMAIN=$TUNNEL_DOMAIN" >> $GITHUB_ENV
+
     - name: Install misskey
       run: |
         wget https://raw.githubusercontent.com/Srgr0/bash-install/refactor/a.sh
         wget https://raw.githubusercontent.com/Srgr0/bash-install/refactor/testenv_githubactions.txt
+        sed -i "s/host=127.0.0.1/host=$TUNNEL_DOMAIN/g" testenv_githubactions.txt
         sudo chmod 555 ./a.sh
         sudo bash -x ./a.sh -c ./testenv_githubactions.txt
 
-    - name: Start ngrok tunnel
-      run: |
-        wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
-        sudo tar xvzf ./ngrok-v3-stable-linux-amd64.tgz -C /usr/local/bin
-        ngrok authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
-        ngrok http 3000 &
-#--basic-auth "${{ secrets.ACCESS_ID }}:${{ secrets.ACCESS_PASS }}"
-
     - name: Post tunnel info to Discord
       run: |
-        NGROK_URL=$(curl http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels[0].public_url')
-        echo "::add-mask::NGROK_URL"
         CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S JST')
         COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
-        curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"URL: $NGROK_URL\nRepository: ${{ github.repository }}\nCommit: $COMMIT_URL\nTime: $CURRENT_TIME\"}" ${{ secrets.DISCORD_WEBHOOK_URL }}
+        curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"URL: https://$TUNNEL_DOMAIN\nRepository: ${{ github.repository }}\nCommit: $COMMIT_URL\nTime: $CURRENT_TIME\"}" ${{ secrets.DISCORD_WEBHOOK_URL }}
 
     - name: Wait
       run: |
