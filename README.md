@@ -10,7 +10,8 @@ GitHub ActionsでMisskeyのテスト用環境を構築します。
 - デプロイ情報をDiscord(webhook)に送信  
 
 ### 前提条件
-- webhookを受信可能なurl(Discord等)  
+- webhookを受信可能なurl(Discord等)
+  <details><summary>送信されるデプロイ情報の例</summary><img width="409" alt="ScreenShot 2024-01-10 1 19 30" src="https://github.com/Srgr0/misskey-test-ga/assets/66754887/8022fd0b-2906-41eb-9b63-45b3aa18c932"></details>
 
 ### 使用方法
 1. リポジトリのAction Secretに以下を追加  
