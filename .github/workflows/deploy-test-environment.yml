@@ -15,7 +15,7 @@ jobs:
     - name: Set environment variable (for tput command & pnpm)
       run: |
         echo "TERM=xterm" >> $GITHUB_ENV
-        BRANCH=${{ github.event.inputs.branch || 'your-default-branch-here' }}
+        BRANCH=${{ github.event.inputs.branch || github.ref_name }}
         echo "BRANCH=$BRANCH" >> $GITHUB_ENV
 
     - name: Checkout
