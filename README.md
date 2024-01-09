@@ -17,7 +17,7 @@ GitHub ActionsでMisskeyのテスト用環境を構築します。
 1. リポジトリのAction Secretに以下を追加  
    DISCORD_WEBHOOK_URL : デプロイ情報の送信先url(webhookを受信可能なurl, Discordを推奨)  
 2. workflowをリポジトリに保存  
-   [deploy-test-environment.yml](https://github.com/Srgr0/misskey-test-ga/blob/main/.github/workflows/deploy-test-environment.yml)をコピーして、リポジトリの ``.github/workflows`` ディレクトリに保存してください。  
+   [deploy-test-environment.yml](https://github.com/joinmisskey/misskey-tga/blob/main/.github/workflows/deploy-test-environment.yml)をコピーして、リポジトリの ``.github/workflows`` ディレクトリに保存してください。  
    一部のトリガーは、workflowがデフォルトブランチに保存されている場合のみ機能します。詳細については[ワークフローをトリガーするイベント - GitHub Docs](https://docs.github.com/ja/actions/using-workflows/events-that-trigger-workflows)を確認してください。  
 3. workflowの編集  
    必要に応じて、トリガーや実行時間を変更してください。  
