@@ -57,7 +57,7 @@ jobs:
 
     - name: Post tunnel info to Discord
       run: |
-        CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S JST')
+        CURRENT_TIME=$(TZ=Asia/Tokyo date +'%Y-%m-%d %H:%M:%S JST')
         COMMIT_URL="https://github.com/$REPOSITORY/commit/$SHA"
         curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"==============================\nURL: https://$TUNNEL_DOMAIN\nRepository: $REPOSITORY\nBranch: $BRANCH\nCommit: $COMMIT_URL\nTime: $CURRENT_TIME\n==============================\"}" ${{ secrets.DISCORD_WEBHOOK_URL }}
 
