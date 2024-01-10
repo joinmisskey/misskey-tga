@@ -1,4 +1,4 @@
-# Misskey Test environment with GitHub Actions
+# Misskey Test environment with GitHub Actions (β)
 
 ### 概要
 GitHub ActionsでMisskeyのテスト用環境を構築します。  
