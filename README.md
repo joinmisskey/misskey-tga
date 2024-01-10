@@ -18,13 +18,15 @@ GitHub ActionsでMisskeyのテスト用環境を構築します。
    DISCORD_WEBHOOK_URL : デプロイ情報の送信先url(webhookを受信可能なurl, Discordを推奨)  
 2. workflowをリポジトリに保存  
    [deploy-test-environment.yml](https://github.com/joinmisskey/misskey-tga/blob/main/.github/workflows/deploy-test-environment.yml)をコピーして、リポジトリの ``.github/workflows`` ディレクトリに保存してください。  
-   一部のトリガーは、workflowがデフォルトブランチに保存されている場合のみ機能します。詳細については[ワークフローをトリガーするイベント - GitHub Docs](https://docs.github.com/ja/actions/using-workflows/events-that-trigger-workflows)を確認してください。  
-3. workflowの編集  
+> [!TIP]
+> workflowファイルが保存されているリポジトリ・ブランチが、既定のMisskeyリポジトリ・ブランチとして使用されます。つまり、workflowファイルはMisskeyリポジトリ・ブランチ(複数のブランチがある場合には各ブランチ)に保存する必要があります。  
+> Pull Request用のブランチなどにworkflowファイルを保存したくない場合、workflowファイルをデフォルトブランチに保存した上で、workflow_dispatchトリガーでinputsとして ``repository`` と ``branch`` を指定することで、任意のリポジトリ・ブランチを使用することができます。  
+> workflow_dispatchを含む一部のトリガーは、workflowがデフォルトブランチに保存されている場合のみ機能します。詳細については[ワークフローをトリガーするイベント - GitHub Docs](https://docs.github.com/ja/actions/using-workflows/events-that-trigger-workflows)を確認してください。  
+4. workflowの編集  
    必要に応じて、トリガーや実行時間を変更してください。  
-4. workflowの実行  
+5. workflowの実行  
    設定されたトリガーに基づき、workflowが実行されます。自動でMisskeyの構築が行われ、インストールが完了するとDiscord(webhook)にデプロイ情報が送信されます。  
-   既定では、workflowファイルの保存されているリポジトリ・ブランチが使用されます。workflow_dispatchトリガーでinputsとして ``repository`` と ``branch`` を指定することで、任意のリポジトリ・ブランチを使用することができます。  
-   公開先のurlについては、セキュリティ上の観点からログ上ではマスクしています。インスタンスのログは公開されますのでご注意ください(公開しないよう設定も可能ですが、インスタンスに直接接続できないためデバッグが困難になります)。  
+   公開先のurlについては、セキュリティ上の観点からログ上ではマスクされます。インスタンスのログは公開されますのでご注意ください(公開しないよう設定も可能ですが、インスタンスに直接接続できないためデバッグが困難になります)。  
 6. Misskeyのテスト  
    Discord(webhook)に送信されたurlからMisskeyにアクセスし、テストを行ってください。外部インスタンスとの連合も可能ですが、テスト環境が一時的なものであることに留意し、テスト環境間でのみ連合をすることを強く推奨します。  
 7. テストの終了  
