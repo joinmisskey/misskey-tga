@@ -1,7 +1,9 @@
-name: Deploy test environment
+name: DEMO - Deploy test environment
 
 on:
-  #push
+  push:
+  schedule:
+    - cron: '1 1 * * *'
   workflow_dispatch:
     inputs:
       repository:
@@ -18,9 +20,9 @@ jobs:
     - name: Set environment variable (for tput command & pnpm)
       run: |
         echo "TERM=xterm" >> $GITHUB_ENV
-        REPOSITORY=${{ github.event.inputs.repository || github.repository }}
+        REPOSITORY=misskey-dev/misskey
         echo "REPOSITORY=$REPOSITORY" >> $GITHUB_ENV
-        BRANCH=${{ github.event.inputs.branch || github.ref_name }}
+        BRANCH=master
         echo "BRANCH=$BRANCH" >> $GITHUB_ENV
 
     - name: Checkout
@@ -55,12 +57,12 @@ jobs:
         sudo chmod 555 ./misskey-install.sh
         sudo bash -x ./misskey-install.sh -c ./testenv_githubactions.txt
 
-    - name: Post tunnel info to Discord
-      run: |
-        CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S JST')
-        COMMIT_URL="https://github.com/$REPOSITORY/commit/$SHA"
-        curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"==============================\nURL: https://$TUNNEL_DOMAIN\nRepository: $REPOSITORY\nBranch: $BRANCH\nCommit: $COMMIT_URL\nTime: $CURRENT_TIME\n==============================\"}" ${{ secrets.DISCORD_WEBHOOK_URL }}
+#    - name: Post tunnel info to Discord
+#      run: |
+#        CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S JST')
+#        COMMIT_URL="https://github.com/$REPOSITORY/commit/$SHA"
+#        curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"==============================\nURL: https://$TUNNEL_DOMAIN\nRepository: $REPOSITORY\nBranch: $BRANCH\nCommit: $COMMIT_URL\nTime: $CURRENT_TIME\n==============================\"}" ${{ secrets.DISCORD_WEBHOOK_URL }}
 
     - name: Wait
       run: |
-        timeout 1800 tail -f /var/log/syslog || true
+        timeout 300 tail -f /var/log/syslog || true
