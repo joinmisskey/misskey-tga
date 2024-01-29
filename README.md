@@ -32,3 +32,9 @@ GitHub ActionsでMisskeyのテスト用環境を構築します。
    Discord(webhook)に送信されたurlからMisskeyにアクセスし、テストを行ってください。外部インスタンスとの連合も可能ですが、テスト環境が一時的なものであることに留意し、テスト環境間でのみ連合をすることを強く推奨します。  
 7. テストの終了  
    デフォルトでは、インストール完了から1800秒(30分)で終了します。終了後は全てのデータが消去されますのでご注意ください。インスタンスのログはGitHub Actionsの設定に基づき一定期間保存されます。  
+
+### GitHub Actionsの規約への適合について
+[joinmisskey/misskey-tga]()の[0e502cf](https://github.com/joinmisskey/misskey-tga/tree/0e502cf396ac85f6a4a6fe7a7111956a236b4579)時点でのワークフロー構成について、GitHub Supportに確認した際の記録を公開しております。リンクは[こちら](https://gist.github.com/Srgr0/53720be675c0fe902dc112497426ce7d)です。
+記録内で確認している通り、この記録の[misskey-tgaのREADME](https://github.com/joinmisskey/misskey-tga/blob/main/README.md)での参照目的での使用(共有)については、サポート担当者より許可を得ております。  
+記録内にある通り、GitHub Supportの見解は問い合わせ時点でのワークフロー構成([here](https://github.com/joinmisskey/misskey-tga/blob/0e502cf396ac85f6a4a6fe7a7111956a236b4579/.github/workflows/deploy-test-environment.yml))に対するものであり、この構成が変更された場合には見解が当てはまらない可能性があることに留意してください。ここでの変更には、[joinmisskey/misskey-tga](https://github.com/joinmisskey/misskey-tga)において行われた変更も含まれます。  
+懸念点がある場合には、GitHub Supportに問い合わせることも可能です(有料アカウントが必要です)。  
