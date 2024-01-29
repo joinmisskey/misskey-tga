@@ -1,7 +1,6 @@
 name: Deploy test environment
 
 on:
-  #push
   workflow_dispatch:
     inputs:
       repository:
@@ -9,6 +8,9 @@ on:
         required: false
       branch:
         description: 'Branch to deploy (optional)'
+        required: false
+      commit_hash:
+        description: 'Commit hash to deploy (optional)'
         required: false
 
 jobs:
@@ -22,12 +24,14 @@ jobs:
         echo "REPOSITORY=$REPOSITORY" >> $GITHUB_ENV
         BRANCH=${{ github.event.inputs.branch || github.ref_name }}
         echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+        COMMIT_HASH=${{ github.event.inputs.commit_hash }}
+        echo "COMMIT_HASH=$COMMIT_HASH" >> $GITHUB_ENV
 
     - name: Checkout
       uses: actions/checkout@v4
       with:
         repository: ${{ env.REPOSITORY }}
-        ref: ${{ env.BRANCH }}
+        ref: ${{ env.COMMIT_HASH || env.BRANCH }}
 
     - name: Get the latest commit SHA
       run: |
