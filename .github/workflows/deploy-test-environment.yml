@@ -7,16 +7,36 @@ name: Deploy test environment
 
 on:
   #push:
+  workflow_call:
+    inputs:
+      repository:
+        description: 'Repository to deploy'
+        type: string
+        required: true
+      branch:
+        description: 'Branch to deploy'
+        type: string
+        required: true
+      commit_hash:
+        description: 'Commit hash to deploy'
+        type: string
+        required: true
+    secrets:
+      DISCORD_WEBHOOK_URL:
+        required: true
   workflow_dispatch:
     inputs:
       repository:
         description: 'Repository to deploy (optional)'
+        type: string
         required: false
       branch:
         description: 'Branch to deploy (optional)'
+        type: string
         required: false
       commit_hash:
         description: 'Commit hash to deploy (optional)'
+        type: string
         required: false
 
 jobs:
