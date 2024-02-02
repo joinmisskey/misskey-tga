@@ -17,11 +17,35 @@ GitHub ActionsでMisskeyのテスト用環境を構築します。
 ### 使用方法
 1. リポジトリのAction Secretに以下を追加  
    DISCORD_WEBHOOK_URL : デプロイ情報の送信先url(webhookを受信可能なurl, Discordを推奨)  
-2. workflowをリポジトリに保存  
-   [deploy-test-environment.yml](https://github.com/joinmisskey/misskey-tga/blob/main/.github/workflows/deploy-test-environment.yml)をコピーして、リポジトリの ``.github/workflows`` ディレクトリに保存してください。  
+2. リポジトリで以下のようなワークフローを構成
+```
+name: deploy-test-environment
+
+on:
+  #push:
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: 'Repository to deploy (optional)'
+        type: string
+        required: false
+      branch_or_hash:
+        description: 'Branch or Commit hash to deploy (optional)'
+        type: string
+        required: false
+
+jobs:
+  deploy-test-environment:
+    uses: joinmisskey/misskey-tga/.github/workflows/deploy-test-environment.yml@main
+    with:
+      repository: ${{ github.event.inputs.repository }}
+      branch_or_hash: ${{ github.event.inputs.branch_or_hash }}
+    secrets:
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+```
 > [!TIP]
 > workflowファイルが保存されているリポジトリ・ブランチが、既定のMisskeyリポジトリ・ブランチとして使用されます。つまり、workflowファイルはMisskeyリポジトリ・ブランチ(複数のブランチがある場合には各ブランチ)に保存する必要があります。  
-> Pull Request用のブランチなどにworkflowファイルを保存したくない場合、workflowファイルをデフォルトブランチに保存した上で、workflow_dispatchトリガーでinputsとして ``repository`` と ``branch`` を指定することで、任意のリポジトリ・ブランチを使用することができます。  
+> Pull Request用のブランチなどにworkflowファイルを保存したくない場合、workflowファイルをデフォルトブランチに保存した上で、workflow_dispatchトリガーでinputsとして ``repository`` と ``branch_or_hash`` を指定することで、任意のリポジトリ・ブランチを使用することができます。  
 > workflow_dispatchを含む一部のトリガーは、workflowがデフォルトブランチに保存されている場合のみ機能します。詳細については[ワークフローをトリガーするイベント - GitHub Docs](https://docs.github.com/ja/actions/using-workflows/events-that-trigger-workflows)を確認してください。  
 4. workflowの編集  
    必要に応じて、トリガーや実行時間を変更してください。  
