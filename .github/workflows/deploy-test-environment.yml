@@ -12,11 +12,11 @@ on:
       repository:
         description: 'Repository to deploy'
         type: string
-        required: true
+        required: false
       branch_or_hash:
         description: 'Branch or Commit hash to deploy'
         type: string
-        required: true
+        required: false
     secrets:
       DISCORD_WEBHOOK_URL:
         required: true
