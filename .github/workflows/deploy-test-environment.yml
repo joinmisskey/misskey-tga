@@ -6,29 +6,40 @@
 name: Deploy test environment
 
 on:
+  #以下のコメントアウトを外すことで、このワークフローが保存されているブランチにpushがあった際に自動で実行します(このワークフローが保存されているリポジトリとブランチが使用されます)
   #push:
+  #このワークフローを別のワークフローから呼び出すことができます。inputsのrepository/branch_or_hashが渡されなかった場合、呼び出し元のワークフローが保存されているリポジトリ/ブランチが使用されます。
   workflow_call:
     inputs:
       repository:
-        description: 'Repository to deploy'
+        description: 'Repository to deploy (optional, use the repository where this workflow is stored by default)'
         type: string
         required: false
       branch_or_hash:
-        description: 'Branch or Commit hash to deploy'
+        description: 'Branch or Commit hash to deploy　(optional, use the branch where this workflow is stored by default)'
         type: string
+        required: false
+      wait_time:
+        description: 'Time to wait in seconds (optional, 1800 seconds by default)'
+        type: number
         required: false
     secrets:
       DISCORD_WEBHOOK_URL:
         required: true
+  #github.comのリポジトリのActionsタブやAPIなどを使用して、ワークフローを実行することができます。inputsのrepository/branch_or_hashが渡されなかった場合、このワークフローが保存されているリポジトリ/ブランチが使用されます。
   workflow_dispatch:
     inputs:
       repository:
-        description: 'Repository to deploy (optional)'
+        description: 'Repository to deploy (optional, use the repository where this workflow is stored by default)'
         type: string
         required: false
       branch_or_hash:
-        description: 'Branch or Commit hash to deploy (optional)'
+        description: 'Branch or Commit hash to deploy　(optional, use the branch where this workflow is stored by default)'
         type: string
+        required: false
+      wait_time:
+        description: 'Time to wait in seconds (optional, 1800 seconds by default)'
+        type: number
         required: false
 
 jobs:
@@ -42,6 +53,8 @@ jobs:
         echo "REPOSITORY=$REPOSITORY" >> $GITHUB_ENV
         BRANCH_OR_HASH=${{ github.event.inputs.branch_or_hash || github.ref_name }}
         echo "BRANCH_OR_HASH=$BRANCH_OR_HASH" >> $GITHUB_ENV
+        WAIT_TIME=${{ github.event.inputs.wait_time || '1800' }}
+        echo "WAIT_TIME=$WAIT_TIME" >> $GITHUB_ENV
 
     - name: Checkout
       uses: actions/checkout@v4
@@ -83,4 +96,4 @@ jobs:
 
     - name: Wait
       run: |
-        timeout 1800 tail -f /var/log/syslog || true
+        timeout $WAIT_TIME tail -f /var/log/syslog || true
