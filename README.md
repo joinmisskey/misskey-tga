@@ -26,12 +26,16 @@ on:
   workflow_dispatch:
     inputs:
       repository:
-        description: 'Repository to deploy (optional)'
+        description: 'Repository to deploy (optional, use the repository where this workflow is stored by default)'
         type: string
         required: false
       branch_or_hash:
-        description: 'Branch or Commit hash to deploy (optional)'
+        description: 'Branch or Commit hash to deploy　(optional, use the branch where this workflow is stored by default)'
         type: string
+        required: false
+      wait_time:
+        description: 'Time to wait in seconds (optional, 1800 seconds by default)'
+        type: number
         required: false
 
 jobs:
@@ -40,6 +44,7 @@ jobs:
     with:
       repository: ${{ github.event.inputs.repository }}
       branch_or_hash: ${{ github.event.inputs.branch_or_hash }}
+      wait_time: ${{ github.event.inputs.wait_time }}
     secrets:
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
 ```
