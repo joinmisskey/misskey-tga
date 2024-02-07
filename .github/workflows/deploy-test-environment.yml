@@ -21,7 +21,7 @@ on:
         required: false
       wait_time:
         description: 'Time to wait in seconds (optional, 1800 seconds by default)'
-        type: number
+        type: string
         required: false
     secrets:
       DISCORD_WEBHOOK_URL:
@@ -39,7 +39,7 @@ on:
         required: false
       wait_time:
         description: 'Time to wait in seconds (optional, 1800 seconds by default)'
-        type: number
+        type: string
         required: false
 
 jobs:
