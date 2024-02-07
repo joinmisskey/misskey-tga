@@ -35,7 +35,7 @@ on:
         required: false
       wait_time:
         description: 'Time to wait in seconds (optional, 1800 seconds by default)'
-        type: number
+        type: string
         required: false
 
 jobs:
