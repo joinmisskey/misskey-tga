@@ -81,7 +81,7 @@ jobs:
     uses: joinmisskey/misskey-tga/.github/workflows/deploy-test-environment.yml@main
     with:
       repository: ${{ inputs.repository || github.repository }}
-      branch_or_hash: ${{ inputs.branch_or_hash || github.ref }}
+      branch_or_hash: ${{ inputs.branch_or_hash || github.ref_name }}
       wait_time: ${{ inputs.wait_time || '1800' }}
     secrets:
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
