@@ -78,7 +78,7 @@ jobs:
 
   deploy-test-environment-wd:
     if: github.event_name == 'workflow_dispatch'
-    uses: srgr0/misskey-tga/.github/workflows/deploy-test-environment.yml@test
+    uses: joinmisskey/misskey-tga/.github/workflows/deploy-test-environment.yml@main
     with:
       repository: ${{ inputs.repository || github.repository }}
       branch_or_hash: ${{ inputs.branch_or_hash || github.ref }}
