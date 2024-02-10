@@ -1,6 +1,6 @@
 ######################################################################
 # joinmisskey/misskey-tga(https://github.com/joinmisskey/misskey-tga)
-# v0.4.1
+# v0.4.2
 ######################################################################
 
 name: Deploy test environment
@@ -49,11 +49,11 @@ jobs:
     - name: Set environment variable (for tput command & pnpm)
       run: |
         echo "TERM=xterm" >> $GITHUB_ENV
-        REPOSITORY=${{ github.event.inputs.repository || github.repository }}
+        REPOSITORY=${{ inputs.repository || github.repository }}
         echo "REPOSITORY=$REPOSITORY" >> $GITHUB_ENV
-        BRANCH_OR_HASH=${{ github.event.inputs.branch_or_hash || github.ref_name }}
+        BRANCH_OR_HASH=${{ inputs.branch_or_hash || github.ref_name }}
         echo "BRANCH_OR_HASH=$BRANCH_OR_HASH" >> $GITHUB_ENV
-        WAIT_TIME=${{ github.event.inputs.wait_time || '1800' }}
+        WAIT_TIME=${{ inputs.wait_time || '1800' }}
         echo "WAIT_TIME=$WAIT_TIME" >> $GITHUB_ENV
 
     - name: Checkout
