@@ -85,6 +85,15 @@ jobs:
         sed -i "s/host=127.0.0.1/host=$TUNNEL_DOMAIN/g" testenv_githubactions.txt
         sed -i "s|git_repository=https://github.com/misskey-dev/misskey|git_repository=https://github.com/$REPOSITORY|g" testenv_githubactions.txt
         sed -i "s|git_branch=master|git_branch=$BRANCH_OR_HASH|g" testenv_githubactions.txt
+
+        # misskey-install.sh は内部で runner とは別のユーザーに切り替えて各種ツールを実行する。
+        # しかし GitHub Actions の制約 ( https://github.com/actions/runner-images/issues/13049 ) により、
+        # sudo/su でユーザーを切り替えても runner ユーザーの XDG_CONFIG_HOME が環境に残り続けることがある。
+        # その結果、別ユーザーで実行された Git/pnpm 等が誤って /home/runner/.config を参照してしまうため、
+        # misskey-install.sh を実行する前に XDG_CONFIG_HOME を環境から除去しておく必要がある。
+        sudo sed -i '/^[[:space:]]*XDG_CONFIG_HOME[[:space:]]*=/d' /etc/environment
+        unset XDG_CONFIG_HOME
+
         sudo chmod 555 ./misskey-install.sh
         sudo bash -x ./misskey-install.sh -c ./testenv_githubactions.txt
 
